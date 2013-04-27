@@ -6,9 +6,8 @@ from django.contrib import admin
 
 import codepku.config as config
 
-from meta import Point, Streak
-from badge import Badge
-#from userrecord import UserRecord
+from submodels.meta import Point, Streak
+from submodels.badge import Badge
 
 class UserMeta(models.Model):
     """
@@ -171,4 +170,5 @@ admin.site.register(Badge, BadgeAdmin)
 admin.site.register(Point, PointAdmin)
 admin.site.register(Streak, StreakAdmin)
 admin.site.register(Activity, ActivityAdmin)
+
 

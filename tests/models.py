@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from django.test import TestCase
 from codepku.users.models import *
 from codepku.lesson.models import *
-from codepku.users.models.track import *
+from codepku.record.models import *
 
 def initDB():
     course = Course(

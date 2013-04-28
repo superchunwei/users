@@ -52,7 +52,7 @@ class User(models.Model):
     point = PointField(default='', null=True, blank=True)
     #streak = models.OneToOneField(Streak, null=True, blank=True)
     streak = StreakField(default='', null=True, blank=True)
-    badges = models.ManyToManyField(Badge, null=True, blank=True)
+    badges = models.ManyToManyField(Badge, blank=True)
     
     def addActivity(self, activity):
         """
@@ -106,7 +106,7 @@ class UserAdmin(admin.ModelAdmin):
                     'password', 'birth', 'work',), 
             }),
         ('record', {
-            'fields': ('point', 'streak',),
+            'fields': ('point', 'streak','badges',),
             }),
         ('Advanced options', {
             'fields':( 'open_id', 'open_token',

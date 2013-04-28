@@ -119,15 +119,6 @@ class UserAdmin(admin.ModelAdmin):
 class BadgeAdmin(admin.ModelAdmin):
     list_display = ('no', 'name', )
 
-"""
-class PointAdmin(admin.ModelAdmin):
-    list_display = ('tem_score', 'his_date', 'his_best_score', 'total', )
-
-class StreakAdmin(admin.ModelAdmin):
-    list_display = ('last_date', 'tem_days', 'best_days', 
-                    'total',)
-"""
-
 class ActivityAdmin(admin.ModelAdmin):
     list_display = ('date', 'content', 'user',)
 

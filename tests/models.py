@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 __all__ = (
     'UserTest', 'PointTest', 'StreakTest',
     'TrackTest',
@@ -9,6 +11,7 @@ from django.test import TestCase
 from codepku.users.models import *
 from codepku.lesson.models import *
 from codepku.record.models import *
+from codepku.users.submodels.fields import PointField, StreakField
 
 def initDB():
     course = Course(
@@ -66,9 +69,8 @@ class UserTest(TestCase):
         self.user.save()
         initDB()
 
-
     def test_init(self):
-        self.user.init()
+        #self.user.init()
         print '.. user s point:'
         print self.user.point
         print '.. user s steak:'
@@ -92,13 +94,21 @@ class UserTest(TestCase):
 
 
 class PointTest(TestCase):
+    """
+    对pointfield 进行测试
+    """
     def setUp(self):
         self.user = User(name='superjom')
-        self.user.init()
+        #self.user.init()
         self.user.save()
+
+    def test_python(self):
+        print 'point', self.user.point
+
 
     def test_inc(self):
         point = self.user.point
+        print '###### point is ', point
         today = datetime.today().date() 
         tomorrow = today + timedelta(days=1)
         point.inc(1)
@@ -128,7 +138,7 @@ class PointTest(TestCase):
 class StreakTest(TestCase):
     def setUp(self):
         self.user = User(name='superjom')
-        self.user.init()
+        #self.user.init()
         self.user.save()
 
     def test_inc(self):
@@ -162,7 +172,7 @@ class StreakTest(TestCase):
 class TrackTest(TestCase):
     def setUp(self):
         self.user = User(name='superjom')
-        self.user.init()
+        #self.user.init()
         self.user.save()
         initDB()
 
@@ -178,6 +188,22 @@ class TrackTest(TestCase):
         )
         track.flush()
         print '.. track: ', track
+
+
+class UserTest(TestCase):
+    def setUp(self):
+        self.user = User(name='superjom')
+        self.user.save()
+
+    def test_point(self):
+        print 'first point: ', self.user.point
+        print 'first point: ', self.user.point
+        print 'first point: ', self.user.point
+        print 'first point: ', self.user.point
+        self.user.point.inc(1)
+        print 'first inc: ', self.user.point
+        self.user.point.inc(1)
+        print 'inc: ', self.user.point
 
 
 

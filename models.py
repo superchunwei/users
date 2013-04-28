@@ -6,8 +6,10 @@ from django.contrib import admin
 
 import codepku.config as config
 
-from submodels.meta import Point, Streak
+#from submodels.meta import Point, Streak
+from submodels.fields import PointField, StreakField
 from submodels.badge import Badge
+#from codepku.record.models import Track
 
 class UserMeta(models.Model):
     """
@@ -24,6 +26,8 @@ class UserMeta(models.Model):
     class Meta:
         app_label = 'users'
 
+
+today = datetime.today().date() 
 
 class User(models.Model):
     GENDER_CHOICES = (
@@ -44,43 +48,12 @@ class User(models.Model):
     # TODO change to integer
     open_type = models.CharField(max_length=64, null=True, blank=True)
     # meta
-    point = models.OneToOneField(Point, null=True, blank=True)
-    streak = models.OneToOneField(Streak, null=True, blank=True)
-    badges = models.ManyToManyField(Badge)
-
-    class Meta:
-        app_label = 'users'
-
-    def init(self):
-        """
-        init some data structure for user
-
-        add 
-            Point, Streak
-        """
-        today = datetime.today()
-        # add a Point
-        point = Point(
-            tem_score = 0,
-            his_date = today,
-            his_best_score = 0,
-            total = 0,
-        )
-        # add a Streak
-        streak = Streak(
-            last_date = today,
-            tem_days = 0,
-            # best record
-            best_days = 0,
-            total = 0,
-        )
-        point.save()
-        streak.save()
-        self.point = point
-        self.streak = streak
-
-        self.save()
-
+    #point = models.OneToOneField(Point, null=True, blank=True)
+    point = PointField(default='', null=True, blank=True)
+    #streak = models.OneToOneField(Streak, null=True, blank=True)
+    streak = StreakField(default='', null=True, blank=True)
+    badges = models.ManyToManyField(Badge, null=True, blank=True)
+    
     def addActivity(self, activity):
         """
         添加一个activity
@@ -93,24 +66,11 @@ class User(models.Model):
             del activities[-1]
         activity.save()
 
-    def addTrack(self, course, chapter, step):
-        """
-        添加用户上课的轨迹
-        一般在新的章节时执行
-        如果已经有了同意Course, 则修改Chapter
-        """
-        try:
-            track = Track.objects.get(course=course)
-            if track.chapter != chapter:
-                track.chapter = chapter
-                track.step = step
-        except:
-            track = Track(course=course, user=self,
-                        chapter=chapter, step=step)
-        track.save()
-
     def __unicode__(self):
-        return self.name
+        return self.name if self.name is not None else 'None'
+
+
+
 
 
 class Activity(models.Model):
@@ -145,6 +105,9 @@ class UserAdmin(admin.ModelAdmin):
             'fields': ('name', 'email', 'gender',
                     'password', 'birth', 'work',), 
             }),
+        ('record', {
+            'fields': ('point', 'streak',),
+            }),
         ('Advanced options', {
             'fields':( 'open_id', 'open_token',
             'open_type',),
@@ -152,23 +115,26 @@ class UserAdmin(admin.ModelAdmin):
     )
     search_fields = ('name',)
 
+
 class BadgeAdmin(admin.ModelAdmin):
     list_display = ('no', 'name', )
 
+"""
 class PointAdmin(admin.ModelAdmin):
     list_display = ('tem_score', 'his_date', 'his_best_score', 'total', )
 
 class StreakAdmin(admin.ModelAdmin):
     list_display = ('last_date', 'tem_days', 'best_days', 
                     'total',)
+"""
 
 class ActivityAdmin(admin.ModelAdmin):
     list_display = ('date', 'content', 'user',)
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Badge, BadgeAdmin)
-admin.site.register(Point, PointAdmin)
-admin.site.register(Streak, StreakAdmin)
+#admin.site.register(Point, PointAdmin)
+#admin.site.register(Streak, StreakAdmin)
 admin.site.register(Activity, ActivityAdmin)
 
 

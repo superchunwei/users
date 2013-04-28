@@ -9,6 +9,8 @@ from django.db import models
 
 import codepku.utils as utils
 
+
+
 class Point(models.Model):
     """
     用户得分

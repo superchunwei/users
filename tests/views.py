@@ -68,12 +68,14 @@ class UserInfoPageTest(TestCase):
         # test_user_point
         user = User.objects.get(id=self.userid)
         point = user.point
+        print '## point: ', point
         self.assertEqual(
             (point.today, point.best, point.total), 
              (1, 1, 1), "wrong with user point inc")
 
         # streak
         streak = user.streak
+        print '##> streak:', streak
         self.assertEqual(
             (streak.streak, streak.best),
             (1, 1), "wrong with streak")
@@ -134,7 +136,9 @@ class UserInfoPageTest(TestCase):
         print 'tracks: ', tracks
 
 
+        """
         res = self.client.get('/users/userinfo', {
         })
         print res
+        """
 

@@ -19,14 +19,14 @@
 <h2>point:</h2>
 <ul>
     <li>today: {{point.today}}</li>
-    <li>today: {{point.best}}</li>
-    <li>today: {{point.total}}</li>
+    <li>best: {{point.best}}</li>
+    <li>total: {{point.total}}</li>
 </ul>
 
 <h2>streak:</h2>
 <ul>
     <li>streak: {{streak.streak}}</li>
-    <li>streak: {{streak.best}}</li>
+    <li>best: {{streak.best}}</li>
 </ul>
 
 <h2>activities:</h2>

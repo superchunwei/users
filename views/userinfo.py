@@ -4,7 +4,7 @@
 """
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from codepku.utils import Storage, error404
+from codepku.utils import Storage, error404, logger
 from codepku.users.models import User, Badge
 
 class UserInfoPage(TemplateView):
@@ -33,7 +33,7 @@ class UserInfoPage(TemplateView):
         # TODO 传入那种信息
         data = self.getData(request)
 
-        if data is None:
+        if data is not None:
             return render(request, 'users/userinfo.tpl', data)
         else:
             return error404("get userinfo error")
@@ -42,17 +42,20 @@ class UserInfoPage(TemplateView):
         _session  = Storage(request.session)
         self.user = User.objects.get(id=_session.userid)
 
+        return { 
+            'username': _session.username,
+            'avater': _session.avater,
+            'usertype': _session.usertype,
+            'badges' : self.getBadges(),
+            'point' : self.getPoint(self.user),
+            'streak' : self.getStreak(),
+            'activities' : self.getActivities(), 
+            'tracks': self.getTracks(),
+            }
         try:
-            return { 
-                'username': _session.username,
-                'avater': _session.avater,
-                'usertype': _session.usertype,
-                'badges' : self.getBadges(),
-                'point' : self.getPoint(self.user),
-                'streak' : self.getStreak(),
-                'activities' : self.getActivities(), 
-                'tracks': self.getTracks(),}
-        except:
+            pass
+        except Exception, e:
+            logger.info('userinfo getData error:', e) 
             return None
 
     # -------------------- details ---------------------------
@@ -62,7 +65,7 @@ class UserInfoPage(TemplateView):
         return a list of 
             [{name, url}, ... ]
         """
-        badges = self.user.badge_set.order_by('no').all()
+        badges = self.user.badges.order_by('no').all()
         res = []
         for b in badges:
             res.append({'name': b.name, 'url':b.url})
@@ -97,7 +100,7 @@ class UserInfoPage(TemplateView):
         return res
 
     def getTracks(self):
-        tracks = self.user.treak_set.order_by('date').all()
+        tracks = self.user.track_set.all()
         res = []
         for t in tracks:
             res.append( { 'course_name': t.course_name,

@@ -93,6 +93,15 @@ class Activity(models.Model):
 
 
 # --------------------- admins -----------------------------
+class BadgeAdmin(admin.ModelAdmin):
+    list_display = ('no', 'name', )
+
+class UserBadgeInline(admin.TabularInline):
+    model = User.badges.through
+
+class ActivityAdmin(admin.ModelAdmin):
+    list_display = ('date', 'content', 'user',)
+
 class UserAdmin(admin.ModelAdmin):
     """
     list_display = ('name', 'email', 'password',
@@ -100,13 +109,15 @@ class UserAdmin(admin.ModelAdmin):
                     'reset_key', 'open_id', 'open_token',
                     'open_type',)
     """
+    inlines = [UserBadgeInline, ]
+
     fieldsets = (
         (None, {
             'fields': ('name', 'email', 'gender',
                     'password', 'birth', 'work',), 
             }),
         ('record', {
-            'fields': ('point', 'streak','badges',),
+            'fields': ('point', 'streak',),
             }),
         ('Advanced options', {
             'fields':( 'open_id', 'open_token',
@@ -116,11 +127,6 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
-class BadgeAdmin(admin.ModelAdmin):
-    list_display = ('no', 'name', )
-
-class ActivityAdmin(admin.ModelAdmin):
-    list_display = ('date', 'content', 'user',)
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Badge, BadgeAdmin)
